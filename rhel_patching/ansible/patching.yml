@@ -1,0 +1,24 @@
+---
+- name: Pre-Patch System Checks
+  hosts: rhel_servers
+  become: yes
+  roles:
+    - prechecks
+ 
+- name: Apply Security Updates
+  hosts: rhel_servers
+  become: yes
+  tasks:
+    - name: Clean yum cache
+      ansible.builtin.command: "{{ yum_clean_cmd }}"
+ 
+    - name: Apply security updates
+      ansible.builtin.command: "{{ yum_update_cmd }}"
+      register: yum_result
+      changed_when: "'No packages marked for update' not in yum_result.stdout"
+ 
+- name: Post-Patch Validation
+  hosts: rhel_servers
+  become: yes
+  roles:
+    - postchecks
