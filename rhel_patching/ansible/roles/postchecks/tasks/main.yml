@@ -1,0 +1,20 @@
+---
+- name: Verify kernel version
+  ansible.builtin.shell: uname -r
+  register: kernel_version
+ 
+- name: Check update history
+  ansible.builtin.shell: yum history list last 5
+  register: update_history
+ 
+- name: Check reboot required
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_check
+ 
+- name: Cleanup old kernels
+  ansible.builtin.shell: package-cleanup --oldkernels --count=1 -y
+ 
+- name: Verify system stability
+  ansible.builtin.command: uptime
+  register: system_uptime
