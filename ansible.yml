@@ -1,0 +1,16 @@
+- hosts: all
+  become: True
+  tasks:
+    - name: Install packages
+      yum:
+        name: "nginx"
+        state: "present"
+    - name: Start nginx server
+      service:
+        name: nginx
+        state: started
+        enabled: True
+    - name: Deploy static website
+      copy:
+        src: index.html # We have define a html page 
+        dest: /var/www/html/
