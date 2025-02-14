@@ -5,12 +5,20 @@
       yum:
         name: "nginx"
         state: "present"
+
     - name: Start nginx server
       service:
         name: nginx
         state: started
         enabled: True
+
+    - name: Ensure /var/www/html exists
+      file:
+        path: /var/www/html
+        state: directory
+        mode: '0755'
+
     - name: Deploy static website
       copy:
-        src: index.html # We have define a html page 
-        dest: /var/www/html/
+        src: files/index.html  # Ensure the file is in the 'files' directory
+        dest: /var/www/html/index.html
